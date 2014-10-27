@@ -12,7 +12,7 @@ var Webgl = (function(){
         this.renderer.setClearColor(0x2D2D2D);
 
         // Directly add objects
-        this.someObject = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50), new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true}));
+        this.someObject = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50,10,10,10), new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true}));
         this.someObject.position.set(-60, 0, 0);
         this.scene.add(this.someObject);
 

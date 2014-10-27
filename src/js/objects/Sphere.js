@@ -3,7 +3,7 @@ var Sphere = (function(){
     function Sphere(){
         THREE.Object3D.call(this);
 
-        var geometry = new THREE.SphereGeometry(35);
+        var geometry = new THREE.SphereGeometry(35,10,10);
         var material = new THREE.MeshBasicMaterial({color: 0x3facc8, wireframe: true});
         this.mesh = new THREE.Mesh(geometry, material);
         this.add(this.mesh);
