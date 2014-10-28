@@ -12,13 +12,12 @@ var Webgl = (function(){
         this.renderer.setClearColor(0x2D2D2D);
 
         // Directly add objects
-        this.someObject = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50,10,10,10), new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true}));
-        this.someObject.position.set(-60, 0, 0);
-        this.scene.add(this.someObject);
+//        this.someObject = new THREE.Mesh(new THREE.BoxGeometry(50, 50, 50,10,10,10), new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true}));
+//        this.someObject.position.set(-60, 0, 0);
+//        this.scene.add(this.someObject);
 
         // Or create container classes for them to simplify your code
         this.someOtherObject = new Sphere();
-        this.someOtherObject.position.set(60, 0, 0);
         this.scene.add(this.someOtherObject);
     }
 
@@ -31,8 +30,8 @@ var Webgl = (function(){
     Webgl.prototype.render = function() {    
         this.renderer.render(this.scene, this.camera);
 
-        this.someObject.rotation.y += 0.01;
-        this.someObject.rotation.x += 0.01;
+        //this.someObject.rotation.y += 0.01;
+        //this.someObject.rotation.x += 0.01;
 
         this.someOtherObject.update();
     };
