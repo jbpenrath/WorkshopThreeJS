@@ -1,26 +1,3 @@
-var postprocessing = {};
-	var bokeh_params = {
-			shaderFocus	: false,
-			fstop 		: 2.6 * 3,
-			maxblur 	: 2.0,
-			showFocus 	: false,
-			focalDepth 	: 4.2,
-			manualdof 	: false,
-			vignetting 	: true,
-			depthblur 	: false,
-
-			threshold 	: 0.5,
-			gain 		: 0.1,
-			bias 		: 0.5,
-			fringe		: 0.7,
-
-			focalLength	: 35,
-			noise		: false,
-			pentagon	: false,
-
-			dithering	: 0.00001
-		};
-
 var Webgl = (function(){
 
     function Webgl(width, height){
@@ -52,6 +29,9 @@ var Webgl = (function(){
             }
         }
 
+        this.postprocessing = {};
+        initPostprocessing(this);
+
         this.light = new THREE.PointLight(0x5d0080);
         this.light.position.set(125, 500, 125);
         this.scene.add(this.light);
@@ -61,20 +41,6 @@ var Webgl = (function(){
 
         this.ambientLight = new THREE.AmbientLight(0xffffff);
         this.scene.add(this.ambientLight);
-
-        initPostProcessing(this);
-
-        /* Setting up the DoF parameters to bokeh shader */
-		for( var e in bokeh_params ) {
-			if( e in postprocessing.bokeh_uniforms )
-				postprocessing.bokeh_uniforms[e].value = bokeh_params[e];
-		}
-		postprocessing.enabled = true;
-		postprocessing.bokeh_uniforms["znear"].value 	= this.camera.near;
-		postprocessing.bokeh_uniforms["zfar"].value 	= this.camera.far;
-		this.camera.setLens( bokeh_params.focalLength );
-
-
 
     }
 
@@ -86,49 +52,33 @@ var Webgl = (function(){
 
     Webgl.prototype.render = function() {    
         this.renderer.render(this.scene, this.camera);
-        this.renderer.render( postprocessing.scene, postprocessing.camera );
+        this.postprocessing.composer.render( 0.1 );
     }
-
-    /**
-	* Init the depth of field post processing scene
-	*/
-	function initPostProcessing(_this) {
-		postprocessing.scene  = _this.scene;
-		postprocessing.camera = _this.camera;
-
-		/* Rendering to color and depth textures */
-		var params = {
-			minFilter: THREE.LinearFilter,
-			magFilter: THREE.LinearFilter,
-			format   : THREE.RGBFormat
-		};
-
-		/* Preparing the frame buffers to be rendered to */
-		postprocessing.rtTextureDepth = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, params );
-		postprocessing.rtTextureColor = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, params );
-
-		var bokeh_shader = THREE.BokehShader;
-		postprocessing.bokeh_uniforms = THREE.UniformsUtils.clone( bokeh_shader.uniforms );
-		postprocessing.bokeh_uniforms["tColor"].value = postprocessing.rtTextureColor;
-		postprocessing.bokeh_uniforms["tDepth"].value = postprocessing.rtTextureDepth;
-
-		postprocessing.bokeh_uniforms["textureWidth" ].value = window.innerWidth;
-		postprocessing.bokeh_uniforms["textureHeight"].value = window.innerHeight;
-
-		postprocessing.materialBokeh = new THREE.ShaderMaterial( {
-			uniforms 		: postprocessing.bokeh_uniforms,
-			vertexShader 	: bokeh_shader.vertexShader,
-			fragmentShader 	: bokeh_shader.fragmentShader,
-			defines: {
-				RINGS	: 3,
-				SAMPLES	: 2
-			}
-		} );
-
-		postprocessing.quad = new THREE.Mesh( new THREE.PlaneGeometry( window.innerWidth, window.innerHeight ), postprocessing.materialBokeh );
-		_this.scene.add( postprocessing.quad );
-	}
 
     return Webgl;
 
 })();
+
+function initPostprocessing(_this) {
+    var renderPass = new THREE.RenderPass( _this.scene, _this.camera );
+
+    var bokehPass = new THREE.BokehPass( _this.scene, _this.camera, {
+        focus: 		1.0,
+        aperture:	0.025,
+        maxblur:	1.0,
+
+        width: window.innerWidth,
+        height: window.innerHeight
+    } );
+
+    bokehPass.renderToScreen = true;
+
+    var composer = new THREE.EffectComposer( _this.renderer );
+
+    composer.addPass( renderPass );
+    composer.addPass( bokehPass );
+
+    _this.postprocessing.composer = composer;
+    _this.postprocessing.bokeh = bokehPass;
+
+}
