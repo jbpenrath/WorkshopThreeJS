@@ -181,6 +181,8 @@ var Webgl = (function(){
 		self.webgl.line.position.set((e.pageX - window.innerWidth/2)/90, -((e.pageY - window.innerHeight/2)/90), currentLinePos.z);
 		self.webgl.line.rotation.set(((e.pageY - window.innerHeight/2)/70)*Math.PI/70, ((e.pageX - window.innerWidth/2)/90)*Math.PI/90, 0);
 
+		$('#title').css('opacity', Math.abs((window.innerWidth/12)/(e.pageX - window.innerWidth/2)));
+
 	});
 
 
