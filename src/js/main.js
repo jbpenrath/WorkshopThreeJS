@@ -7,20 +7,20 @@ function init(){
     $('.three').append(webgl.renderer.domElement);
 
     // Trackball
-    controls = new THREE.TrackballControls(webgl.camera, webgl.renderer.domElement);
-    controls.rotateSpeed = 1.0;
-				controls.zoomSpeed = 1.2;
-				controls.panSpeed = 0.8;
-
-				controls.noZoom = false;
-				controls.noPan = false;
-
-				controls.staticMoving = true;
-				controls.dynamicDampingFactor = 0.3;
-
-				controls.keys = [ 65, 83, 68 ];
-
-				controls.addEventListener( 'change', webgl.render );
+//    controls = new THREE.TrackballControls(webgl.camera, webgl.renderer.domElement);
+//    controls.rotateSpeed = 1.0;
+//				controls.zoomSpeed = 1.2;
+//				controls.panSpeed = 0.8;
+//
+//				controls.noZoom = false;
+//				controls.noPan = false;
+//
+//				controls.staticMoving = true;
+//				controls.dynamicDampingFactor = 0.3;
+//
+//				controls.keys = [ 65, 83, 68 ];
+//
+//				controls.addEventListener( 'change', webgl.render );
 
 	var gui_params = {'zoom': webgl.camera.position.z}
     // STATS
@@ -29,6 +29,12 @@ function init(){
 	stats.domElement.style.bottom = '0px';
 	stats.domElement.style.zIndex = 100;
 	$('body').append( stats.domElement );
+
+	var cameraRotationController = {
+		x: webgl.camera.rotation.x,
+		y: webgl.camera.rotation.y,
+		z: webgl.camera.rotation.z
+	}
 
     var effectController  = {
         focus: 		1.0,
@@ -42,10 +48,19 @@ function init(){
         webgl.postprocessing.bokeh.uniforms[ "maxblur" ].value = effectController.maxblur;
     };
 
+	var cameraRotationChanger = function() {
+		webgl.camera.rotation.x = cameraRotationController.x,
+		webgl.camera.rotation.y = cameraRotationController.y,
+		webgl.camera.rotation.z = cameraRotationController.z
+	}
+
     var gui = new dat.GUI();
     gui.add( effectController, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger );
     gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
     gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
+//	gui.add( cameraRotationController, "x").onChange( cameraRotationChanger );
+//	gui.add( cameraRotationController, "y", 0.05).onChange( cameraRotationChanger );
+//	gui.add( cameraRotationController, "z").onChange( cameraRotationChanger );
     gui.close();
 
     $(window).on('resize', resizeHandler);
@@ -72,5 +87,5 @@ function resizeHandler() {
 function animate() {
     requestAnimationFrame(animate);
     webgl.render();
-    controls.update();
+//    controls.update();
 }

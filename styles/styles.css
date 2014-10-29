@@ -3,5 +3,21 @@ body, html {
     height: 100%;
     margin: 0;
     padding: 0;
+	position: absolute;
     overflow: hidden;
+}
+
+#title {
+	color: #fff;
+	font-family: 'Source Code Pro';
+	font-size: 300%;
+	font-weight: lighter;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	line-height: 100px;
+	display: block;
+	margin: 0;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate3D(-50%, -50%, 0);
 }

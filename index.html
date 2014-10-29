@@ -7,6 +7,20 @@
 </head>
 <body>	
     <div class="three"></div>
+	<h1 id='title'>
+		<span class='letter'>C</span>
+		<span class='letter'>i</span>
+		<span class='letter'>r</span>
+		<span class='letter'>c</span>
+		<span class='letter'>l</span>
+		<span class='letter'>e</span>
+	</h1>
+
+	<audio src="./sound/Cloches-E-T.mp3" autoplay preload="auto">
+	<audio src="./sound/Trou-noir_01.mp3" autoplay loop preload="auto">
+
+  Your browser does not support the <code>audio</code> element.
+</audio>
     <script src="assets/lib/dat-gui/build/dat.gui.min.js"></script>
 	<script src="assets/lib/jquery/dist/jquery.min.js"></script>
     <script src="assets/lib/greensock/src/minified/TweenMax.min.js"></script>
@@ -15,5 +29,13 @@
 
     <script src="build/vendors.js"></script>
     <script src="build/app.min.js"></script>
+	<script>
+		var text = $('.letter');
+
+		TweenMax.staggerFrom(text, 10, {opacity:0, ease:Back.easeOut, delay:10}, 1);
+		function valuesToArray(obj) {
+  return Object.keys(obj).map(function (key) { return obj[key]; });
+}
+	</script>
 </body>
 </html>
