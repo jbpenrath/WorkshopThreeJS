@@ -7,7 +7,7 @@ function init(){
     $('.three').append(webgl.renderer.domElement);
 
     // Trackball
-    controls = new THREE.TrackballControls(webgl.camera);
+    controls = new THREE.TrackballControls(webgl.camera, webgl.renderer.domElement);
     controls.rotateSpeed = 1.0;
 				controls.zoomSpeed = 1.2;
 				controls.panSpeed = 0.8;
