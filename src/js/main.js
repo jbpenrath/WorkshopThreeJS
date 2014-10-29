@@ -23,13 +23,45 @@ function init(){
 				controls.addEventListener( 'change', webgl.render );
 
 	var gui_params = {'zoom': webgl.camera.position.z}
+    // STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	$('body').append( stats.domElement );
 
-    gui = new dat.GUI();
-//	gui.add(webgl.camera.position.z, 'zoom', 0, 1000);
+    var effectController  = {
+        focus: 		1.0,
+        aperture:	0.025,
+        maxblur:	1.0
+    };
+
+    var matChanger = function( ) {
+        webgl.postprocessing.bokeh.uniforms[ "focus" ].value = effectController.focus;
+        webgl.postprocessing.bokeh.uniforms[ "aperture" ].value = effectController.aperture;
+        webgl.postprocessing.bokeh.uniforms[ "maxblur" ].value = effectController.maxblur;
+    };
+
+    var gui = new dat.GUI();
+    gui.add( effectController, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger );
+    gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
+    gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
     gui.close();
 
     $(window).on('resize', resizeHandler);
+var update = function () {
 
+    stats.begin();
+
+    // monitored code goes here
+
+    stats.end();
+
+    requestAnimationFrame( update );
+
+};
+
+requestAnimationFrame( update );
     animate();
 }
 
