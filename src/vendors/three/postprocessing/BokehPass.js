@@ -39,6 +39,8 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	var bokehShader = THREE.BokehShader;
 	var bokehUniforms = THREE.UniformsUtils.clone( bokehShader.uniforms );
 
+	console.log(bokehUniforms);
+
 	bokehUniforms[ "tDepth" ].value = this.renderTargetDepth;
 
 	bokehUniforms[ "focus" ].value = focus;

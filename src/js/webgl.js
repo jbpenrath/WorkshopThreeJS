@@ -30,7 +30,7 @@ var Webgl = (function(){
         }
 
         this.postprocessing = {};
-        initPostprocessing(this);
+        this.initPostprocessing();
 
         this.light = new THREE.PointLight(0x5d0080);
         this.light.position.set(125, 500, 125);
@@ -51,34 +51,25 @@ var Webgl = (function(){
     };
 
     Webgl.prototype.render = function() {    
-        this.renderer.render(this.scene, this.camera);
+        //this.renderer.render(this.scene, this.camera);
         this.postprocessing.composer.render( 0.1 );
     }
+
+	Webgl.prototype.initPostprocessing = function() {
+		var renderPass = new THREE.RenderPass(this.scene, this.camera),
+			bokehPass = new THREE.BokehPass(this.scene, this.camera, {});
+
+		bokehPass.renderToScreen = true;
+
+		var composer = new THREE.EffectComposer(this.renderer);
+
+		composer.addPass(renderPass);
+		composer.addPass(bokehPass);
+
+		this.postprocessing.composer = composer;
+		this.postprocessing.bokeh = bokehPass;
+	}
 
     return Webgl;
 
 })();
-
-function initPostprocessing(_this) {
-    var renderPass = new THREE.RenderPass( _this.scene, _this.camera );
-
-    var bokehPass = new THREE.BokehPass( _this.scene, _this.camera, {
-        focus: 		1.0,
-        aperture:	0.025,
-        maxblur:	1.0,
-
-        width: window.innerWidth,
-        height: window.innerHeight
-    } );
-
-    bokehPass.renderToScreen = true;
-
-    var composer = new THREE.EffectComposer( _this.renderer );
-
-    composer.addPass( renderPass );
-    composer.addPass( bokehPass );
-
-    _this.postprocessing.composer = composer;
-    _this.postprocessing.bokeh = bokehPass;
-
-}
