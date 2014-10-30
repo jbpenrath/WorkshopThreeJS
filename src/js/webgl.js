@@ -197,7 +197,7 @@ var Webgl = (function(){
 		this.postprocessing.bokeh = bokehPass;
 	}
 
-	$('.three').on('mousemove', function(e) {
+	$('body').on('mousemove', function(e) {
 		var cursorPos = e.pageX,
 			currentCubePos = self.webgl.Cubecontainer.position,
 			currentLinePos = self.webgl.line.position;
