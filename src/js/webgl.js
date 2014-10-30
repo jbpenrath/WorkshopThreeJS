@@ -25,7 +25,7 @@ var Webgl = (function(){
 
         this.renderer = new THREE.WebGLRenderer({alpha: true});
         this.renderer.setSize(width, height);
-        this.renderer.setClearColor(0x020205, 0);
+        this.renderer.setClearColor(0x051D2A, 0);
 
 		this.postprocessing = {};
         this.bokeh = {
@@ -36,6 +36,11 @@ var Webgl = (function(){
                 width: window.innerWidth,
                 height: window.innerHeight
             };
+
+		this.vignette = {
+			offset: 0.95,
+			darkness: 1.6
+		}
 
         this.initPostprocessing();
 
@@ -82,21 +87,35 @@ var Webgl = (function(){
 
 		var self = this;
 
-		this.tl = new TimelineMax({delay:10,
+		this.bokehTl = new TimelineMax({delay:10,
 								   repeat:-1,
 								   yoyo:true,
 								   onUpdate: function() {
-                                    self.postprocessing.composer.passes[1].uniforms.focus.value = self.bokeh.focus;
-                                    self.postprocessing.composer.passes[1].uniforms.aperture.value = self.bokeh.aperture;
+                                    self.postprocessing.composer.passes[2].uniforms.focus.value = self.bokeh.focus;
+                                    self.postprocessing.composer.passes[2].uniforms.aperture.value = self.bokeh.aperture;
                                 }});
 
-		this.tl.to(self.bokeh, Math.random()*1.5+3, {
+		this.bokehTl.to(self.bokeh, Math.random()*1.5+3, {
 							aperture: Math.random()*0.2 + 0.05,
                             focus: Math.random()*0.5 + 0.1,
                             ease: Linear.easeOut})
 				.to(self.bokeh, Math.random()*1.5+3, {
 							aperture: Math.random()*0.007+0.004,
 							focus: Math.random()*3.0+1.0,
+							ease: Linear.easeOut});
+
+		this.VignetteTl = new TimelineMax({delay:10,
+								   repeat:-1,
+								   yoyo:true,
+								   onUpdate: function() {
+                                    self.postprocessing.composer.passes[1].uniforms.offset.value = self.vignette.offset;
+                                }});
+
+		this.VignetteTl.to(self.vignette, Math.random()*1.5+3, {
+							offset: Math.random()*0.15 + 0.45,
+                            ease: Linear.easeOut})
+				.to(self.vignette, Math.random()*1.5+3, {
+							offset: Math.random()*0.15+0.75,
 							ease: Linear.easeOut});
 
         TweenMax.to(this.camera.position, 10, {
@@ -132,7 +151,8 @@ var Webgl = (function(){
 //        var DirectionalLightHelper = new THREE.PointLightHelper(this.Underlight, 10);
 //        this.scene.add(DirectionalLightHelper);
 
-    }
+
+	};
 
     Webgl.prototype.resize = function(width, height) {
         this.camera.aspect = width / height;
@@ -153,16 +173,27 @@ var Webgl = (function(){
 	Webgl.prototype.initPostprocessing = function() {
         console.log('init');
 		var renderPass = new THREE.RenderPass(this.scene, this.camera),
-			bokehPass = new THREE.BokehPass(this.scene, this.camera, this.bokeh);
+			bokehPass = new THREE.BokehPass(this.scene, this.camera, this.bokeh),
+        	vignettePass = new THREE.ShaderPass(THREE.VignetteShader);
 
 		bokehPass.renderToScreen = true;
+		//vignettePass.renderToScreen = true;
+
+		// Vignetting
+        vignettePass.uniforms['offset'].value = this.vignette.offset;
+        vignettePass.uniforms['darkness'].value = this.vignette.darkness;
+
+
+        var renderPass = new THREE.RenderPass(this.scene, this.camera);
 
 		var composer = new THREE.EffectComposer(this.renderer);
 
 		composer.addPass(renderPass);
+		composer.addPass(vignettePass);
 		composer.addPass(bokehPass);
 
 		this.postprocessing.composer = composer;
+		this.postprocessing.vignettage = vignettePass;
 		this.postprocessing.bokeh = bokehPass;
 	}
 
@@ -171,8 +202,6 @@ var Webgl = (function(){
 			currentCubePos = self.webgl.Cubecontainer.position,
 			currentLinePos = self.webgl.line.position;
 
-		console.log('self');
-		console.log(self.webgl.Cubecontainer);
 		self.webgl.Cubecontainer.position.set((e.pageX - window.innerWidth/2)/150, -((e.pageY - window.innerHeight/2)/150), currentCubePos.z);
 		self.webgl.Cubecontainer.children.forEach(function(cube){
 			cube.rotation.set(-((e.pageY - window.innerHeight/2)/150)*Math.PI/150, ((e.pageX - window.innerWidth/2)/150)*Math.PI/150, 0);
@@ -181,10 +210,9 @@ var Webgl = (function(){
 		self.webgl.line.position.set((e.pageX - window.innerWidth/2)/90, -((e.pageY - window.innerHeight/2)/90), currentLinePos.z);
 		self.webgl.line.rotation.set(((e.pageY - window.innerHeight/2)/70)*Math.PI/70, ((e.pageX - window.innerWidth/2)/90)*Math.PI/90, 0);
 
-		$('#title').css('opacity', Math.abs((window.innerWidth/12)/(e.pageX - window.innerWidth/2)));
+		$('#title').css('opacity', Math.abs((window.innerWidth/24)/(e.pageX - window.innerWidth/2)));
 
 	});
-
 
 
     return Webgl;
@@ -197,7 +225,6 @@ function drawGeometryCircle(side, radius) {
 	for(var i=0; i<=side; i++) {
 		var vector = new THREE.Vector3(Math.cos(i*2*Math.PI/side)*radius, Math.sin(i*2*Math.PI/side)*radius, 0);
 		circleGeometry.vertices.push(vector);
-		console.log(vector);
 	}
 
 //	circleGeometry.vertices.push(new THREE.Vector3(-10, 0, 0));

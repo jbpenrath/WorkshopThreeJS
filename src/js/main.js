@@ -39,13 +39,17 @@ function init(){
     var effectController  = {
         focus: 		1.0,
         aperture:	0.025,
-        maxblur:	1.0
+        maxblur:	1.0,
+		offset: 0.95,
+		darkness: 1.6
     };
 
     var matChanger = function( ) {
         webgl.postprocessing.bokeh.uniforms[ "focus" ].value = effectController.focus;
         webgl.postprocessing.bokeh.uniforms[ "aperture" ].value = effectController.aperture;
         webgl.postprocessing.bokeh.uniforms[ "maxblur" ].value = effectController.maxblur;
+        webgl.postprocessing.vignettage.uniforms[ "offset" ].value = effectController.offset;
+        webgl.postprocessing.vignettage.uniforms[ "darkness" ].value = effectController.darkness;
     };
 
 	var cameraRotationChanger = function() {
@@ -58,6 +62,8 @@ function init(){
     gui.add( effectController, "focus", 0.0, 3.0, 0.025 ).onChange( matChanger );
     gui.add( effectController, "aperture", 0.001, 0.2, 0.001 ).onChange( matChanger );
     gui.add( effectController, "maxblur", 0.0, 3.0, 0.025 ).onChange( matChanger );
+    gui.add( effectController, "offset", 0.0, 3.0, 0.025 ).onChange( matChanger );
+    gui.add( effectController, "darkness", 0.0, 3.0, 0.025 ).onChange( matChanger );
 //	gui.add( cameraRotationController, "x").onChange( cameraRotationChanger );
 //	gui.add( cameraRotationController, "y", 0.05).onChange( cameraRotationChanger );
 //	gui.add( cameraRotationController, "z").onChange( cameraRotationChanger );
