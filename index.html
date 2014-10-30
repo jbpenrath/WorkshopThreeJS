@@ -1,31 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Circle Experiment ~ J.B Penrath</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Awesome Experiment</title>
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:200' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>	
     <div class="three"></div>
 	<h1 id='title'>
-		<span class='letter'>C</span>
-		<span class='letter'>i</span>
-		<span class='letter'>r</span>
-		<span class='letter'>c</span>
-		<span class='letter'>l</span>
+        <span class='letter'>C</span>
+        <span class='letter'>i</span>
+        <span class='letter'>r</span>
+        <span class='letter'>c</span>
+        <span class='letter'>l</span>
+        <span class='letter'>e</span>
+<!--
+		<span class='letter'>J</span>
 		<span class='letter'>e</span>
+		<span class='letter'>a</span>
+		<span class='letter'>n</span>
+		<span class='letter'>-</span>
+		<span class='letter'>B</span>
+		<span class='letter'>a</span>
+		<span class='letter'>p</span>
+		<span class='letter'>t</span>
+		<span class='letter'>i</span>
+		<span class='letter'>s</span>
+		<span class='letter'>t</span>
+		<span class='letter'>e</span><br />
+		<span class='letter'>P</span>
+		<span class='letter'>E</span>
+		<span class='letter'>N</span>
+		<span class='letter'>R</span>
+		<span class='letter'>A</span>
+		<span class='letter'>T</span>
+		<span class='letter'>H</span>
+-->
 	</h1>
 
-	<audio src="./sound/Cloches-E-T.mp3" autoplay preload="auto">
-	<audio src="./sound/Trou-noir_01.mp3" autoplay loop preload="auto">
+	<audio src="./sound/Cloches-E-T.mp3" autoplay preload="auto" />
+	<audio src="./sound/Trou-noir_01.mp3" autoplay loop preload="auto" />
 
-  Your browser does not support the <code>audio</code> element.
-</audio>
-    <script src="assets/lib/dat-gui/build/dat.gui.min.js"></script>
 	<script src="assets/lib/jquery/dist/jquery.min.js"></script>
     <script src="assets/lib/greensock/src/minified/TweenMax.min.js"></script>
 	<script src="assets/lib/threejs/build/three.min.js"></script>
-	<script src="assets/lib/stats.js/build/stats.min.js"></script>
 
     <script src="build/vendors.js"></script>
     <script src="build/app.min.js"></script>
@@ -34,8 +53,8 @@
 
 		TweenMax.staggerFrom(text, 10, {opacity:0, ease:Back.easeOut, delay:10}, 1);
 		function valuesToArray(obj) {
-  return Object.keys(obj).map(function (key) { return obj[key]; });
-}
+            return Object.keys(obj).map(function (key) { return obj[key]; });
+        }
 	</script>
 </body>
 </html>

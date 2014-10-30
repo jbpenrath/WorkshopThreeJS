@@ -9,7 +9,7 @@ body, html {
 
 #title {
 	color: #fff;
-	font-family: 'Source Code Pro';
+	font-family: 'Source Code Pro' ;
 	font-size: 300%;
 	font-weight: lighter;
 	position: absolute;
@@ -18,6 +18,7 @@ body, html {
 	line-height: 100px;
 	display: block;
 	margin: 0;
+    text-align: center;
 	-webkit-transform: translate(-50%, -50%);
 	transform: translate3D(-50%, -50%, 0);
 }

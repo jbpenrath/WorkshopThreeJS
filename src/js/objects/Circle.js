@@ -1,34 +1,25 @@
 var Circle = (function(){
 
-    function Circle(angle, radius){
-        THREE.Object3D.call(this);
+    function Circle(angle, radius, position){
+        THREE.Line.call(this);
 
-        this.wireframe = wireframe !== undefined ? wireframe :  true;
+        var position = position || {x:0, y:0, z:0};
 
-        for(var i=0; i<30; i++) {
-            for(var j=0; j<30; j++) {
-                var cube = new Cube();
-                cube.position.x = Math.random()*2-1;
-                cube.position.y = Math.random()*2-1,
-                cube.position.z = Math.random()*2-1;
+        this.geometry = new THREE.Geometry(),
+        this.material = new THREE.LineBasicMaterial({color: 0xffffff});
 
-                cube.position.normalize();
-                cube.position.multiplyScalar( Math.random() * 10 + 25 );
-                cube.scale.multiplyScalar( 2 );
-
-                cubesTransformed.push(cube);
-
-                cube = new Cube();
-                cube.position.x = i-20;
-                cube.position.z = j-20;
-                cubes.push(cube);
-                this.Cubecontainer.add( cube );
-            }
+        for(var i=0; i<=angle; i++) {
+            var vector = new THREE.Vector3(Math.cos(i*2*Math.PI/angle)*radius, Math.sin(i*2*Math.PI/angle)*radius, 0);
+            this.geometry.vertices.push(vector);
         }
+
+		this.position.set(position.x, position.y, position.z);
+
     }
 
-    Circle.prototype = new THREE.Object3D;
+    Circle.prototype = new THREE.Line;
     Circle.prototype.constructor = Circle;
 
-    return Sphere;
+    return Circle;
+
 })();
