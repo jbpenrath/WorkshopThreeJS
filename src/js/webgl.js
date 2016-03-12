@@ -130,7 +130,6 @@ var Webgl = (function(){
         vignettePass.uniforms['offset'].value = this.vignette.offset;
         vignettePass.uniforms['darkness'].value = this.vignette.darkness;
 
-
         var renderPass = new THREE.RenderPass(this.scene, this.camera);
 
 		var composer = new THREE.EffectComposer(this.renderer);

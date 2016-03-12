@@ -1,5 +1,5 @@
 .DS_Store
-
+.brackets.json
 build
 node_modules
 assets/lib
